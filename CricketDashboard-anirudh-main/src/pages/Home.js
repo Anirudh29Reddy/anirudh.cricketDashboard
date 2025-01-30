@@ -12,18 +12,47 @@ import ContactSection from "@/Components/HomeComponents/ContactSection";
 import FooterSection from "@/Components/HomeComponents/FooterSection";
 
 export default function Home() {
+
+  const faqs = [{
+    question : 'whats your doubt',
+    answer : 'this is my answer'
+  }
+  ,
+  {
+    question : 'whats your doubt 2',
+    answer : 'you should say'
+  }
+  ,
+  {
+    question : 'whats your doubt 2',
+    answer : 'you should say'
+  }
+  ,
+  {
+    question : 'whats your doubt 2',
+    answer : 'you should say'
+  }
+  ,
+  {
+    question : 'whats your doubt 2',
+    answer : 'you should say'
+  }
+
+]
   return (
     <div>
       <Headers  />
       <HeroSections />
-      
-      
       <CricketStats />
-      <OurProcesss />
+      <div className="contianer m-1" >
+      {faqs.map((item)=> <OurProcesss value={item}/>)}
+      </div>
+      
+      
       <FeaturesSection /> 
       <LatestInsightsSection />
-        <CricketMoments />
-    <ContactSection />
+      <CricketMoments />
+      <ContactSection />
       <FooterSection />
     </div>
   );

@@ -9,7 +9,7 @@ const FeaturesSection = () => {
           <div className="feature-card">
             <div className="image-wrapper">
               <img
-                src="/dashboard-image.jpg" 
+                src="PersoniseCricketerDashboard.png" 
                 alt="Cricketer using dashboard"
                 className="feature-image"
               />
@@ -22,7 +22,7 @@ const FeaturesSection = () => {
           <div className="feature-card">
             <div className="image-wrapper">
               <img
-                src="/performance-tracking.jpg"
+                src="ComprehensivePerformanceTracking.png"
                 alt="Performance tracking interface"
                 className="feature-image"
               />
@@ -35,7 +35,7 @@ const FeaturesSection = () => {
           <div className="feature-card">
             <div className="image-wrapper">
               <img
-                src="/coaching-session.jpg"
+                src="SeamlessCoachingRequest.png"
                 alt="Coach and player interaction"
                 className="feature-image"
               />
@@ -48,7 +48,7 @@ const FeaturesSection = () => {
           <div className="feature-card">
             <div className="image-wrapper">
               <img
-                src="/progress-report.jpg"
+                src="DetailedProgressReports.png"
                 alt="Detailed progress report"
                 className="feature-image"
               />

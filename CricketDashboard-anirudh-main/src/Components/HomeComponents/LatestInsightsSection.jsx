@@ -6,25 +6,25 @@ const LatestInsightsSection = () => {
       category: 'Training Techniques',
       title: 'Maximizing Performance: The Role of Data in Cricket Training',
       description: 'Discover how data analytics can transform cricket training for players and coaches.',
-      image: '/api/placeholder/400/300'
+      image: 'MaximizePerformance.png'
     },
     {
       category: 'Performance Analysis',
       title: 'The Importance of Mental Toughness in Cricket',
       description: 'Explore the significance of mental resilience for cricketers and how to develop it.',
-      image: '/api/placeholder/400/300'
+      image: 'MentalThoughts.png'
     },
     {
       category: 'Coaching',
       title: 'Effective Coaching Strategies for Young Cricketers',
       description: 'Learn about coaching techniques that can inspire and develop young cricket talent.',
-      image: '/api/placeholder/400/300'
+      image: 'EffectiveCoaching.png'
     },
     {
       category: 'Technology in Sports',
       title: 'The Evolution of Cricket Technology: A Game Changer',
       description: 'Explore how technology is reshaping the landscape of cricket training and performance.',
-      image: '/api/placeholder/400/300'
+      image: 'EvolutionOfCricket.png'
     }
   ];
 

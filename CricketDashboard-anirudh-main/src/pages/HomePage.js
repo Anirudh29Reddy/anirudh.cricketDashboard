@@ -1,10 +1,11 @@
 import React from "react";
-import Header from "../Components/Header";
-import Banner from "../Components//Banner";
-import AboutUs from "../Components//AboutUs";
-import Features from "../Components//Features";
-import Contact from "../Components//Contact";
-import Footer from "../Components//Footer";
+import { Container } from "@mui/material";
+import Header from "../Components/ExampleHome/Header";
+import Banner from "../Components/ExampleHome/Banner";
+import AboutUs from "../Components/ExampleHome/AboutUs";
+import Features from "../Components/ExampleHome/Features";
+import Contact from "../Components/ExampleHome/Contact";
+import Footer from "../Components/ExampleHome/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = () => {
