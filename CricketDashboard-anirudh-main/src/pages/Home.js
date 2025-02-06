@@ -2,6 +2,7 @@
 
 import Headers from '../Components/HomeComponents/Headers'
 import HeroSections from '../Components/HomeComponents/HeroSections'
+import CricketStats from '../Components/HomeComponents/CricketStats'
 
 export default function Home() {
 
@@ -25,6 +26,7 @@ export default function Home() {
     <div>
       <Headers  />
       <HeroSections />
+      <CricketStats />
       
 
      
