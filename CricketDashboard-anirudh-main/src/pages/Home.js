@@ -1,7 +1,7 @@
 
 
 import Headers from '../Components/HomeComponents/Headers'
-
+import HeroSections from '../Components/HomeComponents/HeroSections'
 
 export default function Home() {
 
@@ -24,6 +24,7 @@ export default function Home() {
   return (
     <div>
       <Headers  />
+      <HeroSections />
       
 
      
