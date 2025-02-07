@@ -4,6 +4,7 @@ import Headers from '../Components/HomeComponents/Headers'
 import HeroSections from '../Components/HomeComponents/HeroSections'
 import CricketStats from '../Components/HomeComponents/CricketStats'
 import OurProcesss from '../Components/HomeComponents/OurProcesss'
+import FeaturesSection from '../Components/HomeComponents/FeaturesSection'
 
 export default function Home() {
 
@@ -31,6 +32,8 @@ export default function Home() {
       <div className="container m-1">
         {faqs.map((item)=><OurProcesss value={item}/>)}
       </div>
+
+      <FeaturesSection />
       
 
      
