@@ -5,6 +5,7 @@ import HeroSections from '../Components/HomeComponents/HeroSections'
 import CricketStats from '../Components/HomeComponents/CricketStats'
 import OurProcesss from '../Components/HomeComponents/OurProcesss'
 import FeaturesSection from '../Components/HomeComponents/FeaturesSection'
+import LatestInsightSection from '../Components/HomeComponents/LatestInsightsSection'
 
 export default function Home() {
 
@@ -34,6 +35,7 @@ export default function Home() {
       </div>
 
       <FeaturesSection />
+      <LatestInsightSection />
       
 
      
