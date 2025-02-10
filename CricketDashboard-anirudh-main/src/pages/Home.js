@@ -6,6 +6,7 @@ import CricketStats from '../Components/HomeComponents/CricketStats'
 import OurProcesss from '../Components/HomeComponents/OurProcesss'
 import FeaturesSection from '../Components/HomeComponents/FeaturesSection'
 import LatestInsightSection from '../Components/HomeComponents/LatestInsightsSection'
+import CricketMoments from '../Components/HomeComponents/CricketMoments'
 
 export default function Home() {
 
@@ -36,6 +37,7 @@ export default function Home() {
 
       <FeaturesSection />
       <LatestInsightSection />
+      <CricketMoments />
       
 
      
