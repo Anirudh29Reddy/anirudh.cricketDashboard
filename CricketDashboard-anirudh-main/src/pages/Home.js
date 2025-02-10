@@ -8,6 +8,7 @@ import FeaturesSection from '../Components/HomeComponents/FeaturesSection'
 import LatestInsightSection from '../Components/HomeComponents/LatestInsightsSection'
 import CricketMoments from '../Components/HomeComponents/CricketMoments'
 import ContactSection from '../Components/HomeComponents/ContactSection'
+import FooterSection from '../Components/HomeComponents/FooterSection'
 
 export default function Home() {
 
@@ -40,8 +41,7 @@ export default function Home() {
       <LatestInsightSection />
       <CricketMoments />
       <ContactSection />
-      
-
+      <FooterSection />
      
     </div>
   );
