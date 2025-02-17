@@ -59,6 +59,7 @@ const CoachHeader = () => {
             top: 0;
             z-index: 1000;
           }
+            
 
           .nav-container {
             display: flex;
