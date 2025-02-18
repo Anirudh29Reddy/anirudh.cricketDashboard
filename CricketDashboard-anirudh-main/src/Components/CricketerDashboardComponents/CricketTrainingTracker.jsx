@@ -1,309 +1,190 @@
 import React, { useState } from 'react';
-// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-// import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card';
-y
-import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const CricketTrainingTracker = () => {
-  const [isAddingSession, setIsAddingSession] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({
-    date: '',
-    skillType: '',
-    drillName: '',
-    duration: '',
-    intensity: '',
-    performance: '',
-    notes: ''
-  });
+// Dummy data for Overall Report and Score Table with added roles
+const dummyOverallReport = [
+  { match_id: 1, match_type: 'ODI', date_time: '2025-02-13T10:00:00', venue: 'Wankhede Stadium', opposite_team: 'Australia' },
+  { match_id: 2, match_type: 'T20', date_time: '2025-02-14T15:00:00', venue: 'Eden Gardens', opposite_team: 'England' },
+  { match_id: 3, match_type: 'Test', date_time: '2025-02-15T09:00:00', venue: 'M. Chinnaswamy Stadium', opposite_team: 'South Africa' }
+];
 
-  const [tableData, setTableData] = useState([
-    {
-      id: 1,
-      date: '2025-02-05',
-      skillType: 'Batting',
-      drillName: 'Front Foot Defense',
-      duration: 30,
-      intensity: 'High',
-      performance: 85,
-      notes: 'Improved footwork'
-    },
-    {
-      id: 2,
-      date: '2025-02-05',
-      skillType: 'Bowling',
-      drillName: 'Yorker Practice',
-      duration: 45,
-      intensity: 'Medium',
-      performance: 78,
-      notes: 'Better accuracy'
-    }
-  ]);
+const dummyScoreData = [
+  { ball_record_id: 1, match_id: 1, ball_no: 1, outcome: 'Run', runs: 4, delivery_type: 'Normal', wicket: 'No', player_name: 'Virat Kohli', player_role: 'Batting' },
+  { ball_record_id: 2, match_id: 1, ball_no: 2, outcome: 'Run', runs: 1, delivery_type: 'Normal', wicket: 'No', player_name: 'Virat Kohli', player_role: 'Batting' },
+  { ball_record_id: 3, match_id: 1, ball_no: 3, outcome: 'Run', runs: 6, delivery_type: 'Normal', wicket: 'No', player_name: 'Virat Kohli', player_role: 'Batting' },
+  { ball_record_id: 4, match_id: 2, ball_no: 1, outcome: 'Wicket', runs: 0, delivery_type: 'Yorker', wicket: 'Yes', player_name: 'Jofra Archer', player_role: 'Bowling' },
+  { ball_record_id: 5, match_id: 2, ball_no: 2, outcome: 'Run', runs: 2, delivery_type: 'Normal', wicket: 'No', player_name: 'Jofra Archer', player_role: 'Bowling' },
+  { ball_record_id: 6, match_id: 3, ball_no: 1, outcome: 'Run', runs: 3, delivery_type: 'Normal', wicket: 'No', player_name: 'Dean Elgar', player_role: 'All-rounder' }
+];
 
-  const handleAddClick = () => {
-    setIsAddingSession(true);
-    setEditingId(null);
-    setFormData({
-      date: new Date().toISOString().split('T')[0],
-      skillType: '',
-      drillName: '',
-      duration: '',
-      intensity: '',
-      performance: '',
-      notes: ''
+const CricketMatchReport = () => {
+  const [step, setStep] = useState(1); // Step to track the current step
+  const [matchType, setMatchType] = useState('ODI');
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [overallReport, setOverallReport] = useState(dummyOverallReport);
+  const [scoreData, setScoreData] = useState(dummyScoreData);
+
+  const handleMatchTypeChange = (e) => {
+    setMatchType(e.target.value);
+    const filteredReport = dummyOverallReport.filter(match => match.match_type === e.target.value);
+    const filteredScoreData = dummyScoreData.filter(score => score.match_id === filteredReport[0]?.match_id);
+    
+    setOverallReport(filteredReport);
+    setScoreData(filteredScoreData);
+  };
+
+  const handlePlayerChange = (e) => {
+    setSelectedPlayer(e.target.value);
+  };
+
+  // Directly comparing runs with total balls * 2
+  const categorizeBattingPerformance = (runs, ballsFaced) => {
+    if (runs > ballsFaced * 2) return 'Excellent';
+    if (runs > ballsFaced * 1) return 'Average';
+    return 'Poor';
+  };
+
+  const categorizeBowlingPerformance = (runsGiven, ballsBowled) => {
+    if (runsGiven > ballsBowled * 6) return 'Poor';
+    if (runsGiven > ballsBowled * 3) return 'Average';
+    return 'Excellent';
+  };
+
+  const calculateAllrounderPerformance = (battingPerformance, bowlingPerformance) => {
+    if (battingPerformance === 'Excellent' && bowlingPerformance === 'Excellent') return 'Excellent';
+    if (battingPerformance === 'Poor' || bowlingPerformance === 'Poor') return 'Poor';
+    return 'Average';
+  };
+
+  const aggregateScores = (scoreData) => {
+    const playerScores = {};
+
+    scoreData.forEach((record) => {
+      const { player_name, player_role, runs, ball_no } = record;
+      const key = player_name;
+
+      if (!playerScores[key]) {
+        playerScores[key] = { runs: 0, ballsFaced: 0, runsGiven: 0, ballsBowled: 0, role: player_role };
+      }
+
+      if (player_role === 'Batting') {
+        playerScores[key].runs += runs;
+        playerScores[key].ballsFaced += 1;
+      } else if (player_role === 'Bowling') {
+        playerScores[key].runsGiven += runs;
+        playerScores[key].ballsBowled += 1;
+      }
     });
+
+    for (const player in playerScores) {
+      const { runs, runsGiven, ballsFaced, ballsBowled, role } = playerScores[player];
+      let battingPerformance = categorizeBattingPerformance(runs, ballsFaced);
+      let bowlingPerformance = categorizeBowlingPerformance(runsGiven, ballsBowled);
+
+      if (role === 'All-rounder') {
+        playerScores[player].performance = calculateAllrounderPerformance(battingPerformance, bowlingPerformance);
+      } else {
+        playerScores[player].performance = role === 'Batting' ? battingPerformance : bowlingPerformance;
+      }
+    }
+
+    return playerScores;
   };
 
-  const handleEditClick = (session) => {
-    setEditingId(session.id);
-    setFormData(session);
-    setIsAddingSession(false);
-  };
+  const playerScores = aggregateScores(scoreData);
 
-  const handleDeleteClick = (id) => {
-    if (window.confirm('Are you sure you want to delete this session?')) {
-      setTableData(tableData.filter(session => session.id !== id));
+  const nextStep = () => {
+    if (step < 3) {
+      setStep(step + 1);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editingId) {
-      setTableData(tableData.map(session =>
-        session.id === editingId ? { ...formData, id: editingId } : session
-      ));
-      setEditingId(null);
-    } else {
-      setTableData([...tableData, { ...formData, id: Date.now() }]);
-      setIsAddingSession(false);
+  const prevStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
     }
-    setFormData({
-      date: '',
-      skillType: '',
-      drillName: '',
-      duration: '',
-      intensity: '',
-      performance: '',
-      notes: ''
-    });
   };
-
-  const SessionForm = ({ onSubmit, data, onChange, onCancel }) => (
-    <form onSubmit={onSubmit} className="bg-white p-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Date</label>
-          <input
-            type="date"
-            value={data.date}
-            onChange={e => onChange({ ...data, date: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Skill Type</label>
-          <select
-            value={data.skillType}
-            onChange={e => onChange({ ...data, skillType: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            required
-          >
-            <option value="">Select Skill</option>
-            <option value="Batting">Batting</option>
-            <option value="Bowling">Bowling</option>
-            <option value="Fielding">Fielding</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Drill Name</label>
-          <input
-            type="text"
-            value={data.drillName}
-            onChange={e => onChange({ ...data, drillName: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Duration (min)</label>
-          <input
-            type="number"
-            value={data.duration}
-            onChange={e => onChange({ ...data, duration: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Intensity</label>
-          <select
-            value={data.intensity}
-            onChange={e => onChange({ ...data, intensity: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            required
-          >
-            <option value="">Select Intensity</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Performance (%)</label>
-          <input
-            type="number"
-            value={data.performance}
-            onChange={e => onChange({ ...data, performance: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            required
-            min="0"
-            max="100"
-          />
-        </div>
-        <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Notes</label>
-          <textarea
-            value={data.notes}
-            onChange={e => onChange({ ...data, notes: e.target.value })}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-            rows="3"
-          />
-        </div>
-      </div>
-      <div className="mt-4 flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          {editingId ? 'Update Session' : 'Add Session'}
-        </button>
-      </div>
-    </form>
-  );
-
-  const ProcessTracker = () => (
-    <div className="grid grid-cols-5 gap-4 mb-6">
-      {[1, 2, 3, 4, 5].map((step) => (
-        <div key={step} className="relative">
-          <div className="h-2 bg-gray-200 rounded">
-            <div 
-              className="h-full bg-blue-600 rounded transition-all duration-500"
-              style={{ width: `${Math.random() * 100}%` }}
-            />
-          </div>
-          <span className="absolute -top-6 text-sm">Field {step}</span>
-        </div>
-      ))}
-    </div>
-  );
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Cricket Training Progress</h1>
-      
-      <ProcessTracker />
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">Cricket Match Report</h1>
 
-      <Card className="mt-8">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Training Sessions Log</CardTitle>
-          <button 
-            onClick={handleAddClick}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
-            <Plus size={18} />
-            Add Session
-          </button>
-        </CardHeader>
-        <CardContent>
-          {(isAddingSession || editingId) && (
-            <div className="mb-6">
-              <SessionForm
-                onSubmit={handleSubmit}
-                data={formData}
-                onChange={setFormData}
-                onCancel={() => {
-                  setIsAddingSession(false);
-                  setEditingId(null);
-                }}
-              />
+      {/* Step 1: Match Type Selection */}
+      {step === 1 && (
+        <div>
+          <h2>Select Match Type</h2>
+          <div className="mb-4">
+            <label htmlFor="matchType" className="form-label">Match Type: </label>
+            <select id="matchType" className="form-select" value={matchType} onChange={handleMatchTypeChange}>
+              <option value="ODI">ODI</option>
+              <option value="T20">T20</option>
+              <option value="Test">Test</option>
+            </select>
+          </div>
+          <button className="btn btn-primary" onClick={nextStep}>Next</button>
+        </div>
+      )}
+
+      {/* Step 2: Player Selection */}
+      {step === 2 && (
+        <div>
+          <h2>Select Player</h2>
+          <div className="mb-4">
+            <label htmlFor="playerSelect" className="form-label">Select Player: </label>
+            <select id="playerSelect" className="form-select" onChange={handlePlayerChange}>
+              <option value="">All Players</option>
+              {Array.from(new Set(dummyScoreData.map(record => record.player_name))).map((player, index) => (
+                <option key={index} value={player}>{player}</option>
+              ))}
+            </select>
+          </div>
+          <button className="btn btn-secondary" onClick={prevStep}>Previous</button>
+          <button className="btn btn-primary" onClick={nextStep}>Next</button>
+        </div>
+      )}
+
+      {/* Step 3: Display Player's Score and Ball-by-Ball Record */}
+      {step === 3 && (
+        <div>
+          <h2>Player's Score</h2>
+          {selectedPlayer && (
+            <div>
+              <h3>Performance for {selectedPlayer}</h3>
+              <p><strong>Performance: {playerScores[selectedPlayer]?.performance || 'Not Available'}</strong></p>
             </div>
           )}
-          
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-700">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3">Date</th>
-                  <th className="px-6 py-3">Skill Type</th>
-                  <th className="px-6 py-3">Drill Name</th>
-                  <th className="px-6 py-3">Duration (min)</th>
-                  <th className="px-6 py-3">Intensity</th>
-                  <th className="px-6 py-3">Performance</th>
-                  <th className="px-6 py-3">Notes</th>
-                  <th className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((session) => (
-                  <tr key={session.id} className="bg-white border-b hover:bg-gray-50">
-                    <td className="px-6 py-4">{session.date}</td>
-                    <td className="px-6 py-4">{session.skillType}</td>
-                    <td className="px-6 py-4">{session.drillName}</td>
-                    <td className="px-6 py-4">{session.duration}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium
-                        ${session.intensity === 'High' ? 'bg-red-100 text-red-800' : 
-                          session.intensity === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-green-100 text-green-800'}`}>
-                        {session.intensity}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <span className="mr-2">{session.performance}%</span>
-                        <div className="w-20 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${session.performance}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">{session.notes}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        <button 
-                          onClick={() => handleEditClick(session)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteClick(session.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
+          {selectedPlayer && (
+            <div>
+              <h3>Ball-by-Ball Record for {selectedPlayer}</h3>
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Ball No</th>
+                    <th>Outcome</th>
+                    <th>Runs</th>
+                    <th>Delivery Type</th>
+                    <th>Wicket</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                </thead>
+                <tbody>
+                  {scoreData.filter(record => record.player_name === selectedPlayer).map((record) => (
+                    <tr key={record.ball_record_id}>
+                      <td>{record.ball_no}</td>
+                      <td>{record.outcome}</td>
+                      <td>{record.runs}</td>
+                      <td>{record.delivery_type}</td>
+                      <td>{record.wicket}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <button className="btn btn-secondary" onClick={prevStep}>Previous</button>
+        </div>
+      )}
     </div>
   );
 };
 
-export default CricketTrainingTracker;
+export default CricketMatchReport;
