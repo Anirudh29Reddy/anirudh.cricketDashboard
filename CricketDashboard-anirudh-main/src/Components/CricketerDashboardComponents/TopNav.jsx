@@ -141,7 +141,7 @@ display:block;
             <div className="profile-circle"></div>
             <div className="nav-dropdown">
               <button className="dropdown-toggle">
-                <span className="user-name">Shravani Vibuthi</span>
+                <span className="user-name">Anirudh Reddy</span>
               </button>
               <ul className="dropdown-menu">
                 <li><a href="#">Settings</a></li>
