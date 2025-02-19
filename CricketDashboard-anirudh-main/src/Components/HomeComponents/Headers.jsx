@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 const Headers = () => {
@@ -7,6 +8,12 @@ const Headers = () => {
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const router = useRouter();
+
+  const handleLogin=()=>{
+    router.push('/SignUpoptions')
+  }
 
   return (
     <>
@@ -33,7 +40,7 @@ const Headers = () => {
           </nav>
         </div>
         <div className="buttons">
-          <a href="#" className="join-learn-button join-now">Join Now</a>
+          <a href="#" className="join-learn-button join-now" onClick={handleLogin}>Join Now</a>
           <a href="#" className="join-learn-button learn-more">Learn More</a>
         </div>
       </header>
