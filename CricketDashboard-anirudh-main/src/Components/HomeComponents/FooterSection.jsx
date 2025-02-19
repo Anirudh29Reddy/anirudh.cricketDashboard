@@ -9,7 +9,7 @@ const FooterSection = () => {
         <div className="footer-content">
           <div className="footer-links">
             <div className="footer-column">
-              <h4 >Cricketers</h4>
+              <h4>Cricketers</h4>
               <ul>
                 <li><a href="#">Cricketers</a></li>
                 <li><a href="#">Gallery</a></li>
