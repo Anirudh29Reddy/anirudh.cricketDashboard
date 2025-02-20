@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import Headers from "@/Components/HomeComponents/Headers";
+// import Headers from "@/Components/HomeComponents/Headers";
 
 const RegisterCricketerForm = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ const RegisterCricketerForm = () => {
 
   return (
     <>
-      <Headers />
+      {/* <Headers /> */}
       <div className="cricketer-register-container CricketFormMargin">
         <h2>Register as a Cricketer</h2>
         <form onSubmit={handleSubmit}>
