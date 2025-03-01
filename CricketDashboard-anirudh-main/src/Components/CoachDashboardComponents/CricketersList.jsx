@@ -1,58 +1,110 @@
-import React, { useState } from "react";
-import { Modal, Button, Table, Form } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Table, Form, Spinner } from "react-bootstrap";
 
 const RowCardTable = () => {
   const [showModal, setShowModal] = useState(false);
   const [mainSearch, setMainSearch] = useState("");
-  const [mainSessionFilter, setMainSessionFilter] = useState("");
   const [modalSearch, setModalSearch] = useState("");
-  const [modalSessionFilter, setModalSessionFilter] = useState("");
+  const [data, setData] = useState([]); // Ensure data is always an array
+  const [loading, setLoading] = useState(true); // Track loading state
 
-  // Sample Data
-  const records = [
-    { id: 1, name: "John Doe", session: "Morning", status: "Pending" },
-    { id: 2, name: "Jane Smith", session: "Afternoon", status: "Completed" },
-    { id: 3, name: "Mike Ross", session: "Evening", status: "Pending" },
-    { id: 4, name: "Rachel Green", session: "Morning", status: "Completed" },
-  ];
+  // Fetch data from the API inside useEffect
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/getAssignedCricketers");
+        const result = await response.json();
 
-  // Filtered Data for Main Table
-  const filteredMainRecords = records.filter(
-    (record) =>
-      record.name.toLowerCase().includes(mainSearch.toLowerCase()) &&
-      (mainSessionFilter === "" || record.session === mainSessionFilter)
-  );
+        console.log("API Response:", result); // Debugging
 
-  // Filtered Data for Modal Table
-  const filteredModalRecords = records.filter(
-    (record) =>
-      record.name.toLowerCase().includes(modalSearch.toLowerCase()) &&
-      (modalSessionFilter === "" || record.session === modalSessionFilter)
-  );
+        if (Array.isArray(result)) {
+          setData(result); // Ensure only arrays are set
+        } else {
+          console.error("API did not return an array:", result);
+          setData([]); // Default to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setData([]); // Set empty array on error
+      } finally {
+        setLoading(false); // Stop loading indicator
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Show loading indicator while fetching data
+  if (loading) {
+    return (
+      <div className="text-center mt-4">
+        <Spinner animation="border" variant="primary" />
+        <p>Loading data...</p>
+      </div>
+    );
+  }
+
+  // Ensure data is an array before filtering
+  const filteredMainRecords = Array.isArray(data)
+    ? data.filter(
+        (record) =>
+          record?.cricketer_firstname &&
+          record?.cricketer_lastname &&
+          `${record.cricketer_firstname} ${record.cricketer_lastname}`
+            .toLowerCase()
+            .includes(mainSearch.toLowerCase())
+      )
+    : [];
+
+  const filteredModalRecords = Array.isArray(data)
+    ? data.filter(
+        (record) =>
+          record?.cricketer_firstname &&
+          record?.cricketer_lastname &&
+          `${record.cricketer_firstname} ${record.cricketer_lastname}`
+            .toLowerCase()
+            .includes(modalSearch.toLowerCase())
+      )
+    : [];
+
+  // Handle Train Button Click (update is_active status)
+  const handleTrainClick = async (id) => {
+    try {
+      const response = await fetch(`/api/TrainPlayer?id=${id}&is_active=true`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ is_active: true }),
+      });
+
+      if (response.ok) {
+        setData((prevData) =>
+          prevData.map((record) =>
+            record.id === id ? { ...record, is_active: true } : record
+          )
+        );
+      } else {
+        console.error("Failed to update the cricketer's status.");
+      }
+    } catch (error) {
+      console.error("Error updating cricketer's status:", error);
+    }
+  };
 
   return (
     <div className="container mt-4">
-      <h4 className="mb-3">Train & Report Table</h4>
+      <h4 className="mb-3">Train Table</h4>
 
-      {/* Filter Row for Main Table */}
+      {/* Search Box */}
       <Form className="mb-3 d-flex">
         <Form.Control
           type="text"
-          placeholder="Search by name..."
+          placeholder="Search by cricketer's name..."
           className="me-2"
           value={mainSearch}
           onChange={(e) => setMainSearch(e.target.value)}
         />
-        <Form.Select
-          className="me-2"
-          value={mainSessionFilter}
-          onChange={(e) => setMainSessionFilter(e.target.value)}
-        >
-          <option value="">All Sessions</option>
-          <option value="Morning">Morning</option>
-          <option value="Afternoon">Afternoon</option>
-          <option value="Evening">Evening</option>
-        </Form.Select>
       </Form>
 
       {/* Main Table */}
@@ -60,9 +112,8 @@ const RowCardTable = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Session</th>
-            <th>Status</th>
+            <th>Cricketer Name</th>
+            <th>Assigned Date</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -71,22 +122,24 @@ const RowCardTable = () => {
             filteredMainRecords.map((record) => (
               <tr key={record.id}>
                 <td>{record.id}</td>
-                <td>{record.name}</td>
-                <td>{record.session}</td>
-                <td>{record.status}</td>
+                <td>{`${record.cricketer_firstname} ${record.cricketer_lastname}`}</td>
+                <td>{new Date(record.assigned_date).toLocaleString()}</td>
                 <td>
-                  <Button variant="primary" className="me-2">
-                    Train
-                  </Button>
-                  <Button variant="danger" onClick={() => setShowModal(true)}>
-                    Report
-                  </Button>
+                  {!record.is_active && (
+                    <Button
+                      variant="primary"
+                      className="me-2"
+                      onClick={() => handleTrainClick(record.id)}
+                    >
+                      Train
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center">
+              <td colSpan="4" className="text-center">
                 No matching records found.
               </td>
             </tr>
@@ -100,25 +153,15 @@ const RowCardTable = () => {
           <Modal.Title>Report Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Filter Row for Modal Table */}
+          {/* Search Box */}
           <Form className="mb-3 d-flex">
             <Form.Control
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by cricketer's name..."
               className="me-2"
               value={modalSearch}
               onChange={(e) => setModalSearch(e.target.value)}
             />
-            <Form.Select
-              className="me-2"
-              value={modalSessionFilter}
-              onChange={(e) => setModalSessionFilter(e.target.value)}
-            >
-              <option value="">All Sessions</option>
-              <option value="Morning">Morning</option>
-              <option value="Afternoon">Afternoon</option>
-              <option value="Evening">Evening</option>
-            </Form.Select>
           </Form>
 
           {/* Modal Table */}
@@ -126,9 +169,8 @@ const RowCardTable = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Session</th>
-                <th>Status</th>
+                <th>Cricketer Name</th>
+                <th>Assigned Date</th>
               </tr>
             </thead>
             <tbody>
@@ -136,14 +178,13 @@ const RowCardTable = () => {
                 filteredModalRecords.map((record) => (
                   <tr key={record.id}>
                     <td>{record.id}</td>
-                    <td>{record.name}</td>
-                    <td>{record.session}</td>
-                    <td>{record.status}</td>
+                    <td>{`${record.cricketer_firstname} ${record.cricketer_lastname}`}</td>
+                    <td>{new Date(record.assigned_date).toLocaleString()}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center">
+                  <td colSpan="3" className="text-center">
                     No matching records found.
                   </td>
                 </tr>
