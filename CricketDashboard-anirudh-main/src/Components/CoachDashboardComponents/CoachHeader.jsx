@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { getCoachDetails } from '../pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
+import { getCoachDetails } from '@/pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
 import { useRouter } from 'next/router';
-import { getCoachDetails } from '../../pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
 
 
 
@@ -13,11 +12,20 @@ const CoachHeader = () => {
 
   // getting the state from Store
   const status = useSelector((state) => state.CoachRegister.CoachRegisterDetails.status);
+  
+
+  const [user,setUser] = useState("");
   const username = useSelector((state) => state.CoachRegister.CoachRegisterDetails.firstName);
 
   // Initiating router object
   const router = useRouter();
 
+  useEffect(()=>{
+   setUser(username);
+  },[username])
+
+
+  
 
   // To handle the action done from event
   const dispatch = useDispatch();
@@ -59,7 +67,6 @@ const CoachHeader = () => {
             top: 0;
             z-index: 1000;
           }
-            
 
           .nav-container {
             display: flex;
@@ -179,7 +186,7 @@ display:block;
             <div className="profile-circle"></div>
             <div className="nav-dropdown">
               <button className="dropdown-toggle">
-                <span className="user-name">{username}</span>
+                <span className="user-name">{user}</span>
               </button>
               <ul className="dropdown-menu">
                 <li><a href="#">Settings</a></li>
