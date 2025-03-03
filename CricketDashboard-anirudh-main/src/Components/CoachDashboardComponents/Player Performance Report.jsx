@@ -1,121 +1,125 @@
-import React, { useState } from "react";
-import { Table, Form } from "react-bootstrap";
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
 
-const PlayerPerformanceReport = () => {
-  const [search, setSearch] = useState("");
-  const [playerType, setPlayerType] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+const PlayerPerformanceForm = () => {
+  const [players, setPlayers] = useState([]); // To store player data fetched from API
+  const [selectedPlayer, setSelectedPlayer] = useState(''); // Selected player name
+  const [performance, setPerformance] = useState(''); // Selected performance
+  const [error, setError] = useState(''); // Error message
+  const [success, setSuccess] = useState(''); // Success message
 
-  // Sample Player Data
-  const players = [
-    { id: 1, name: "Virat Kohli", type: "Batter", matches: 250, runs: 12000, wickets: 0 },
-    { id: 2, name: "Jasprit Bumrah", type: "Bowler", matches: 100, runs: 500, wickets: 250 },
-    { id: 3, name: "Ben Stokes", type: "All-rounder", matches: 150, runs: 5000, wickets: 150 },
-    { id: 4, name: "Steve Smith", type: "Batter", matches: 180, runs: 9000, wickets: 10 },
-    { id: 5, name: "Rashid Khan", type: "Bowler", matches: 120, runs: 800, wickets: 220 },
-    { id: 6, name: "Hardik Pandya", type: "All-rounder", matches: 130, runs: 4500, wickets: 120 },
-  ];
+  // Fetch players from the API
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const response = await fetch('/api/getAssignedCricketers');
+        const data = await response.json();
 
-  // Calculate Overall Score (Based on Training Performance)
-  const calculateOverallScore = (player) => {
-    if (player.type === "Batter") {
-      return player.runs / player.matches;
-    } else if (player.type === "Bowler") {
-      return player.wickets / player.matches * 10;
-    } else {
-      return (player.runs / player.matches + player.wickets / player.matches * 5);
+        console.log("API Response:", data); // Debugging API response
+
+        if (Array.isArray(data)) {
+          const activePlayers = data.filter(player => player?.is_active === true);
+          setPlayers(activePlayers); // Ensure only active players are set
+        } else {
+          console.error("API did not return an array:", data);
+          setPlayers([]); // Default to an empty array
+        }
+      } catch (err) {
+        console.error('Error fetching players:', err);
+        setPlayers([]); // Prevent crashing
+      }
+    };
+    fetchPlayers();
+  }, []);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); // Reset error message
+    setSuccess(''); // Reset success message
+
+    if (!selectedPlayer || !performance) {
+      setError('Both player name and performance are required.');
+      return;
     }
-  };
 
-  // Filter Data
-  const filteredPlayers = players.filter(
-    (player) =>
-      player.name.toLowerCase().includes(search.toLowerCase()) &&
-      (playerType === "" || player.type === playerType)
-  );
+    try {
+      const response = await fetch('/api/insertPlayerPerformance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          player_name: selectedPlayer,
+          performance: performance,
+        }),
+      });
 
-  // Sorting Function
-  const sortedPlayers = [...filteredPlayers].sort((a, b) => {
-    if (sortConfig.key) {
-      const aValue = a[sortConfig.key];
-      const bValue = b[sortConfig.key];
+      const result = await response.json();
 
-      if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
-      return 0;
+      if (response.ok) {
+        setSuccess('Player performance added successfully!');
+      } else {
+        setError(result.error || 'Failed to add player performance.');
+      }
+    } catch (err) {
+      setError('Error submitting the form.');
+      console.error('Error:', err);
     }
-    return 0;
-  });
-
-  // Handle Sorting
-  const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
   };
 
   return (
     <div className="container mt-4">
-      <h4 className="mb-3">Cricket Player Performance Report</h4>
+      <h4 className="mb-3">Player Performance Form</h4>
+      {error && <Alert variant="danger">{error}</Alert>}
+      {success && <Alert variant="success">{success}</Alert>}
 
-      {/* Filter Row */}
-      <Form className="mb-3 d-flex">
-        <Form.Control
-          type="text"
-          placeholder="Search by player name..."
-          className="me-2"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Form.Select
-          className="me-2"
-          value={playerType}
-          onChange={(e) => setPlayerType(e.target.value)}
-        >
-          <option value="">All Types</option>
-          <option value="Batter">Batter</option>
-          <option value="Bowler">Bowler</option>
-          <option value="All-rounder">All-rounder</option>
-        </Form.Select>
+      <Form onSubmit={handleSubmit}>
+        {/* Player Name Dropdown */}
+        <Form.Group controlId="playerName" className="mb-3">
+          <Form.Label>Player Name</Form.Label>
+          <Form.Control
+            as="select"
+            value={selectedPlayer}
+            onChange={(e) => setSelectedPlayer(e.target.value)}
+            required
+          >
+            <option value="">Select Player</option>
+            {players.length > 0 ? (
+              players.map((player, index) => (
+                <option key={index} value={`${player.cricketer_firstname} ${player.cricketer_lastname}`}>
+                  {`${player.cricketer_firstname} ${player.cricketer_lastname}`}
+                </option>
+              ))
+            ) : (
+              <option disabled>No active players available</option>
+            )}
+          </Form.Control>
+        </Form.Group>
+
+        {/* Performance Dropdown */}
+        <Form.Group controlId="performance" className="mb-3">
+          <Form.Label>Performance</Form.Label>
+          <Form.Control
+            as="select"
+            value={performance}
+            onChange={(e) => setPerformance(e.target.value)}
+            required
+          >
+            <option value="">Select Performance</option>
+            <option value="Poor">Poor</option>
+            <option value="Average">Average</option>
+            <option value="Excellent">Excellent</option>
+          </Form.Control>
+        </Form.Group>
+
+        {/* Submit Button */}
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
       </Form>
-
-      {/* Performance Table */}
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th onClick={() => handleSort("id")} style={{ cursor: "pointer" }}>#</th>
-            <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }}>Player Name</th>
-            <th onClick={() => handleSort("type")} style={{ cursor: "pointer" }}>Type</th>
-            <th onClick={() => handleSort("matches")} style={{ cursor: "pointer" }}>Matches</th>
-            <th onClick={() => handleSort("runs")} style={{ cursor: "pointer" }}>Runs</th>
-            <th onClick={() => handleSort("wickets")} style={{ cursor: "pointer" }}>Wickets</th>
-            <th onClick={() => handleSort("overallScore")} style={{ cursor: "pointer" }}>Overall Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedPlayers.length > 0 ? (
-            sortedPlayers.map((player) => (
-              <tr key={player.id}>
-                <td>{player.id}</td>
-                <td>{player.name}</td>
-                <td>{player.type}</td>
-                <td>{player.matches}</td>
-                <td>{player.runs}</td>
-                <td>{player.wickets}</td>
-                <td>{calculateOverallScore(player).toFixed(2)}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7" className="text-center">No matching records found.</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
     </div>
   );
 };
 
-export default PlayerPerformanceReport;
+export default PlayerPerformanceForm;
