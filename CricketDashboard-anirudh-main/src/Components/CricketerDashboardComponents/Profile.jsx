@@ -1,84 +1,230 @@
-import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
-    const coachProfile = useSelector((state) => state.CoachRegister.CoachRegisterDetails);
-
     const [isClient, setIsClient] = useState(false);
-    const [imageUrl, setImageUrl] = useState(null);
+    const [formData, setFormData] = useState({
+        born: "",
+        team: "",
+        bio: "",
+    });
+    const [editField, setEditField] = useState(null);
 
-    // Ensure the code runs only on the client-side
+    const firstName = useSelector((state) => state.cricketer.cricketerDetails?.firstname);
+    const lastName = useSelector((state) => state.cricketer.cricketerDetails?.lastname);
+    const phone = useSelector((state) => state.cricketer.cricketerDetails?.phonenumber);
+
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [id, setId] = useState();
+
     useEffect(() => {
+        setFname(firstName);
+        setLname(lastName);
+    }, [firstName, lastName]);
+
+    useEffect(() => {
+        const fetchId = async () => {
+            try {
+                const res = await fetch(`http://localhost:3000/api/GetIdByPlayerNumber?phonenumber=${phone}`);
+                const data = await res.json();
+                setId(data[0]?.cricketerid);
+            } catch (error) {
+                console.error("Error fetching player ID:", error);
+            }
+        };
+        fetchId();
+    }, [phone]);
+
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`/api/GetBasicProfile?cricketerid=${id}`);
+                const data = await response.json();
+                const cricketer = data[0] || {};
+
+                setFormData({
+                    born: cricketer.born || "",
+                    team: cricketer.team || "",
+                    bio: cricketer.bio || "",
+                });
+
+                setFname(cricketer.firstname || "");
+                setLname(cricketer.lastname || "");
+            } catch (error) {
+                console.error("Error fetching cricketer data:", error);
+            }
+        };
+
         setIsClient(true);
-    }, []);
+        fetchData();
+    }, [id]);
 
-    useEffect(() => {
-        // Check if profile picture exists and is an array (assuming binary data)
-        if (coachProfile.profilePicture && coachProfile.profilePicture.length > 0) {
-            // Convert binary array to Base64 string
-            const base64Image = `data:image/jpeg;base64,${btoa(String.fromCharCode(...coachProfile.profilePicture))}`;
-            setImageUrl(base64Image);
-        } else {
-            setImageUrl(null);  // If no image, set to null
+    if (!isClient) return null;
+
+    const handleEdit = (field) => {
+        setEditField(field);
+    };
+
+    const handleChange = (e) => {
+        if (editField === "firstName") setFname(e.target.value);
+        else if (editField === "lastName") setLname(e.target.value);
+        else setFormData({ ...formData, [editField]: e.target.value });
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch(`/api/BasicProfileUpdate?cricketerid=${id}`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ firstName: fname, lastName: lname, ...formData }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update profile");
+            }
+
+            console.log("Profile updated successfully");
+            setEditField(null);
+        } catch (error) {
+            console.error("Error updating profile:", error);
         }
-    }, [coachProfile.profilePicture]);
-
-    if (!isClient) return null; // Ensure rendering only on the client side
+    };
 
     return (
-        <>
+        <div className="container mt-4">
             <div className="row">
-                {/* Profile Image */}
-                <div className="col-md-4 border d-flex align-items-center justify-content-center" style={{ height: '320px' }}>
-                    {imageUrl ? (
-                        <img
-                            src={imageUrl}
-                            alt="Profile"
-                            className="img-fluid rounded-circle"
-                            style={{ width: "150px", height: "150px", objectFit: "cover" }}
-                        />
-                    ) : (
-                        <div className="text-muted">No Profile Image</div>
-                    )}
+                <div className="col-md-4 border d-flex flex-column align-items-center justify-content-center" style={{ height: '320px' }}>
+                    <div className="text-muted">Profile Picture (Dummy)</div>
+                    <div className="img-fluid rounded-circle" style={{ width: "150px", height: "150px", backgroundColor: "#ddd", objectFit: "cover" }}></div>
                 </div>
 
-                {/* Profile Details */}
                 <div className="col-md-6">
-                    <div className="row">
+                    {/* First Name */}
+                    <div className="row mt-3">
                         <div className="col-md-2">
-                            <label>Name</label>
+                            <label>First Name</label>
                         </div>
-                        <div className="col-md-10">
-                            <input type="text" value={`${coachProfile.firstName} ${coachProfile.lastName}`} className="form-control" readOnly />
+                        <div className="col-md-8">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={fname}
+                                onChange={handleChange}
+                                readOnly={editField !== "firstName"}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            {editField === "firstName" ? (
+                                <button className="btn btn-success btn-sm" onClick={handleSubmit}>✔️</button>
+                            ) : (
+                                <button className="btn btn-primary btn-sm" onClick={() => handleEdit("firstName")}>🖊️</button>
+                            )}
                         </div>
                     </div>
-                    <div className="row">
+
+                    {/* Last Name */}
+                    <div className="row mt-3">
+                        <div className="col-md-2">
+                            <label>Last Name</label>
+                        </div>
+                        <div className="col-md-8">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={lname}
+                                onChange={handleChange}
+                                readOnly={editField !== "lastName"}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            {editField === "lastName" ? (
+                                <button className="btn btn-success btn-sm" onClick={handleSubmit}>✔️</button>
+                            ) : (
+                                <button className="btn btn-primary btn-sm" onClick={() => handleEdit("lastName")}>🖊️</button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Born */}
+                    <div className="row mt-3">
                         <div className="col-md-2">
                             <label>Born</label>
                         </div>
-                        <div className="col-md-10">
-                            <input type="text" className="form-control" readOnly />
+                        <div className="col-md-8">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={formData.born}
+                                onChange={handleChange}
+                                readOnly={editField !== "born"}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            {editField === "born" ? (
+                                <button className="btn btn-success btn-sm" onClick={handleSubmit}>✔️</button>
+                            ) : (
+                                <button className="btn btn-primary btn-sm" onClick={() => handleEdit("born")}>🖊️</button>
+                            )}
                         </div>
                     </div>
-                    <div className="row">
+
+                    {/* Team */}
+                    <div className="row mt-3">
                         <div className="col-md-2">
                             <label>Team</label>
                         </div>
-                        <div className="col-md-10">
-                            <input type="text" className="form-control" readOnly />
+                        <div className="col-md-8">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={formData.team}
+                                onChange={handleChange}
+                                readOnly={editField !== "team"}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            {editField === "team" ? (
+                                <button className="btn btn-success btn-sm" onClick={handleSubmit}>✔️</button>
+                            ) : (
+                                <button className="btn btn-primary btn-sm" onClick={() => handleEdit("team")}>🖊️</button>
+                            )}
                         </div>
                     </div>
-                    <div className="row mt-5">
+
+                    {/* Bio */}
+                    <div className="row mt-3">
                         <div className="col-md-2">
                             <label>Bio</label>
                         </div>
-                        <div className="col-md-10">
-                            <input type="text" className="jumbotron form-control" style={{ backgroundColor: 'transparent', height: '100px', width: '100%' }} readOnly />
+                        <div className="col-md-8">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={formData.bio}
+                                onChange={handleChange}
+                                readOnly={editField !== "bio"}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            {editField === "bio" ? (
+                                <button className="btn btn-success btn-sm" onClick={handleSubmit}>✔️</button>
+                            ) : (
+                                <button className="btn btn-primary btn-sm" onClick={() => handleEdit("bio")}>🖊️</button>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+
+            <div className="row mt-4">
+                <div className="col-md-12 text-center">
+                    <button className="btn btn-dark" onClick={handleSubmit}>Submit Profile</button>
+                </div>
+            </div>
+        </div>
     );
 };
 
