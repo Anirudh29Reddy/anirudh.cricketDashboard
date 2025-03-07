@@ -5,36 +5,36 @@ const RowCardTable = () => {
   const [showModal, setShowModal] = useState(false);
   const [mainSearch, setMainSearch] = useState("");
   const [modalSearch, setModalSearch] = useState("");
-  const [data, setData] = useState([]); // Ensure data is always an array
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [data, setData] = useState([]); 
+  const [loading, setLoading] = useState(true); 
 
-  // Fetch data from the API inside useEffect
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/getAssignedCricketers");
         const result = await response.json();
 
-        console.log("API Response:", result); // Debugging
+        console.log("API Response:", result); 
 
         if (Array.isArray(result)) {
           setData(result); // Ensure only arrays are set
         } else {
           console.error("API did not return an array:", result);
-          setData([]); // Default to an empty array
+          setData([]); 
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-        setData([]); // Set empty array on error
+        setData([]); 
       } finally {
-        setLoading(false); // Stop loading indicator
+        setLoading(false); 
       }
     };
 
     fetchData();
   }, []);
 
-  // Show loading indicator while fetching data
+  
   if (loading) {
     return (
       <div className="text-center mt-4">
@@ -44,7 +44,7 @@ const RowCardTable = () => {
     );
   }
 
-  // Ensure data is an array before filtering
+  
   const filteredMainRecords = Array.isArray(data)
     ? data.filter(
         (record) =>
@@ -67,7 +67,7 @@ const RowCardTable = () => {
       )
     : [];
 
-  // Handle Train Button Click (update is_active status)
+  
   const handleTrainClick = async (id) => {
     try {
       const response = await fetch(`/api/TrainPlayer?id=${id}&is_active=true`, {
