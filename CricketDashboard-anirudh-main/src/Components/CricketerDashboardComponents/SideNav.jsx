@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { LogOutForPlayer } from '@/pages/Redux/Cricketer/CricketerAuthAction';
 
 const Sidebar = ({ isOpen, route }) => {
   // Using useState to manage navItems dynamically
@@ -12,27 +15,61 @@ const Sidebar = ({ isOpen, route }) => {
     { label: 'Profile' },
     { label: 'Logout' }
   ]);
+   const router  = useRouter();
+   const dispatch = useDispatch();
+   const loginSession = useSelector((state)=>state.cricketer.session);
+   const [formData, setFormData] = useState({
+      
+       firstName: '',
+       lastName: '',
+       email: '',
+       phoneNumber: '',
+       dateOfBirth: '',
+       gender: '',
+       nationality: '',
+       address: '',
+       
+     
+       battingStyle: '',
+       bowlingStyle: '',
+       role: '',
+       preferredPosition: '',
+       height: '',
+       weight: '',
+       currentTeam: '',
+       
+       
+       profileImage: '',
+       
+       
+       password: '',
+       confirmPassword: ''
+     });
   
-  // Function to update active status when a route is clicked
   const routeIt = (rou) => {
-    // Reset active status for all items
+    
     const updatedNavItems = navItems.map(item => {
       if (item.label === rou) {
-        return { ...item, active: true }; // Set clicked item active
+        return { ...item, active: true }; 
       } else {
-        return { ...item, active: false }; // Reset other items to inactive
+        return { ...item, active: false }; 
       }
     });
     
-    setNavItems(updatedNavItems); // Update state with new active item
+    setNavItems(updatedNavItems); 
 
-    // Call your route function (assumed to be for navigation)
+    
     route(rou);
+    if(rou == 'Logout')
+    {(
+      dispatch(LogOutForPlayer(formData)))
+      router.push('/LoginForm') 
+    }
   };
   
   useEffect(() => {
-    // Optional: You can invoke routeIt here if needed on initial load or route change
-    // routeIt('Dashboard'); // Uncomment if you want to set initial route to 'Dashboard'
+    if(!loginSession) router.push('/LoginForm');
+    
   }, []); 
 
   return (
