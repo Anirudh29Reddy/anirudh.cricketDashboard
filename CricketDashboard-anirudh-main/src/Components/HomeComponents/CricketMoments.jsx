@@ -25,7 +25,7 @@ const CricketMoments = () => {
   ];
 
   return (
-    <div className="moments-container">
+    <div className="moments-container" id='CricketMomemts'>
       <div className="moments-header">
         <h2>Cricket Moments</h2>
         <p>Explore our collection of memorable cricketing events and achievements.</p>
