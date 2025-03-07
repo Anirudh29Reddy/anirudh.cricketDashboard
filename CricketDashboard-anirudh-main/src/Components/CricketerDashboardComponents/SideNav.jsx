@@ -130,8 +130,8 @@ const Sidebar = ({ isOpen, route }) => {
               className={`nav-link ${item.active ? 'active' : ''}`}
               href="#"
               onClick={(e) => {
-                e.preventDefault(); // Prevent default anchor behavior
-                routeIt(item.label); // Use item.label to set active
+                e.preventDefault(); 
+                routeIt(item.label); 
               }}
             >
               {item.label}
