@@ -1,4 +1,4 @@
-
+import '@fortawesome/fontawesome-free/css/all.css';
 
 const FooterSection = () => {
 
@@ -42,7 +42,7 @@ const FooterSection = () => {
           </div>
 
           <div className="footer-bottom">
-            <p>© 2025 CricketConnect. All rights reserved.</p>
+            <p>©️ 2025 CricketConnect. All rights reserved.</p>
             <div className="footer-legal">
               <a href="#">Terms and Conditions</a>
               <a href="#">Privacy Policy</a>
@@ -55,7 +55,7 @@ const FooterSection = () => {
                 <i className="fab fa-instagram"></i>
               </a>
               <a href="#" aria-label="Twitter">
-                <i className="fab fa-twitter"></i>
+             <i className="fab fa-twitter"></i>
               </a>
             </div>
           </div>
