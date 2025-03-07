@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const TopNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const phone = useSelector((state)=> state.cricketer.cricketerDetails?.firstname);
+  const [name, setName] = useState("");
+  useEffect(()=>{
+    setName(phone);
+  },[phone])
+  console.log(phone,"huh");
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -141,7 +147,7 @@ display:block;
             <div className="profile-circle"></div>
             <div className="nav-dropdown">
               <button className="dropdown-toggle">
-                <span className="user-name">Anirudh Reddy</span>
+                <span className="user-name">{name}</span>
               </button>
               <ul className="dropdown-menu">
                 <li><a href="#">Settings</a></li>
