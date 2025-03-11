@@ -1,10 +1,16 @@
 import React from "react";
+import { useRouter } from "next/router";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap for layout
 
 
 const HeroSection = () => {
+
+  const router = useRouter();
+  const handleLogin=()=>{
+    router.push('/SignUpoptions')
+  }
   return (
-    <div className="hero-wrapper">
+    <div className="hero-wrapper" id="hero-section">
       <div className="hero-content-box">
         
         {/* Left Section - Text */}
@@ -18,7 +24,7 @@ const HeroSection = () => {
             Upload your history, request coaching, and visualize your progress.
           </p>
           <div className="hero-button-group">
-            <button className="hero-btn-primary">Get Started</button>
+            <button className="hero-btn-primary" onClick={handleLogin}>Get Started</button>
             <button className="hero-btn-outline">Learn More</button>
           </div>
         </div>
