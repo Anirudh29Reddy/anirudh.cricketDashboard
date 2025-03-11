@@ -1,101 +1,112 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from "next/router";
 
-const OurProcesss = (props) => {
-    console.log("values",props.value)
-    const [count,setCount] = useState(0);
+const faqs = [
+  {
+    question: 'Step 1: Sign Up',
+    answer: 'Create your personalized account to access tailored features and resources.'
+  },
+  {
+    question: 'Step 2: Upload Performance',
+    answer: 'Cricketers can upload their performance history for better coaching insights.'
+  },
+  {
+    question: 'Step 3: Connect with Coaches',
+    answer: 'Request coaching from professionals and track your progress through your dashboard.'
+  }
+];
 
-    const handleShow= () =>{
-        if(count)
-        setCount(count+1);
-        else setCount(count-1);
+const OurProcesss = () => {
+  // Track expanded state for each step
+  const [expanded, setExpanded] = useState(faqs.map(() => false));
 
-    }
-    useEffect(()=>{
+  // Toggle expansion
+  const handleShow = (index) => {
+    setExpanded(expanded.map((item, i) => (i === index ? !item : item)));
+  };
+  const router = useRouter();
+  const GetStarted=()=>{
+    router.push('/SignUpoptions')
+  }
 
-    },[count]);
+  return (
+    <div style={{ width: '90%', margin: '0 auto', fontFamily: 'sans-serif' }}>
+      {/* Heading Section */}
+      <div style={{ marginBottom: '50px', textAlign: 'left' }}>
+        <h2 style={{ margin: 0 ,fontSize:'40px'}}>Our Process</h2>
+        <p style={{ margin: '5px 0 0' }}>
+          Discover how CricketConnect empowers cricketers and coaches to enhance their skills
+          and connect seamlessly.
+        </p>
+      </div>
 
-    return <>
-     {/* <div className='container-fluid ' >
-        <div className='row'> */}
-            <div className='container mt-2' style={{borderBottom:(count)?'' : '2px solid black'}}>
-                <div className='row'>
-                <div className='col-md-10' >
-                    <h2 style={{padding:'1%',color:(count)?'blue':''}}>{props.value.question} 
-                    </h2>
-                </div>
-                <div className='col-md-2 '  >
-                    <div style={{marginTop:'0%',float:'right'}} onClick={handleShow}>
-                        {(count)? <img src='up-arrow.png' width='25%' ></img> : <img src='down-arrow.png' width='25%' ></img>
-                    }</div>
-                </div>
-                </div>
-                
-
-
-                {/* <h2 style={{borderTop:'2px solid black',borderBottom:(count)?'' : '2px solid black',padding:'1%',color:(count)?'blue':''}}>{props.value.question} 
-                    <span style={{position:'absolute',marginTop:'-1.2%',float:'right',marginLeft:'40%'}} onClick={handleShow}>
-                        {(count)? <img src='up-arrow.png' width='15%' ></img> : <img src='down-arrow.png' width='15%' ></img>
-                    }</span>
-                </h2> */}
-                
-                <p style={{marginTop:'0%',marginLeft:'0%',display:(count)?'':'none',borderBottom:(count)?'2px solid black':'',padding:(count)?'1%':'',backgroundColor:'rgb(242, 242, 242,0.2)'}}><span style={{marginLeft:'4%'}}>{props.value.answer}</span></p>
+      {/* FAQ Steps (Top Section) */}
+      <div>
+        {faqs.map((step, index) => (
+          <div
+            key={index}
+            style={{
+              borderBottom: '1px solid black',
+              padding: '10px 0',
+              marginBottom: '10px'
+            }}
+          >
+            {/* Step Question & Toggle Icon */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+              onClick={() => handleShow(index)}
+            >
+              <h5
+                style={{
+                  margin: 0,
+                  fontWeight: 'normal',
+                  color: expanded[index] ? 'blue' : 'inherit'
+                }}
+              >
+                {step.question}
+              </h5>
+              {/* Simple Square Icon - replace with an <img> or any other icon if desired */}
+              <span style={{ fontSize: '2rem' }}>
+                {expanded[index] ? '□' : '□'}
+              </span>
             </div>
 
-            
-        {/* </div>
-     </div> */}
-    </>
-        // <section className="process-section">
-        //     <h1 className="section-title">Our Process</h1>
-        //     <p className="section-description">
-        //         Discover how CricketConnect empowers cricketers and coaches to enhance their skills and connect seamlessly.
-        //     </p>
+            {/* Step Answer (shown only if expanded) */}
+            {expanded[index] && (
+              <p style={{ marginTop: '10px', marginBottom: 0 }}>
+                {step.answer}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
 
-        //     <div className="steps-container">
-        //         <div className="step">
-        //             <button className="step-button" onClick={() => handleStepClick(0)}>
-        //                 <span className="step-title">Step 1: Sign Up</span>
-        //                 <svg className={`step-icon ${activeStep === 0 ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        //                     <path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        //                 </svg>
-        //             </button>
-        //             <div className={`step-content ${activeStep === 0 ? 'active' : ''}`}>
-        //                 <p>Create your account and get started with CricketConnect. Fill in your details and preferences to begin your journey.</p>
-        //             </div>
-        //         </div>
-
-        //         <div className="step">
-        //             <button className="step-button" onClick={() => handleStepClick(1)}>
-        //                 <span className="step-title">Step 2: Upload Performance</span>
-        //                 <svg className={`step-icon ${activeStep === 1 ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        //                     <path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        //                 </svg>
-        //             </button>
-        //             <div className={`step-content ${activeStep === 1 ? 'active' : ''}`}>
-        //                 <p>Share your cricket performances through videos and statistics. Track your progress and showcase your skills.</p>
-        //             </div>
-        //         </div>
-
-        //         <div className="step">
-        //             <button className="step-button" onClick={() => handleStepClick(2)}>
-        //                 <span className="step-title">Step 3: Connect with Coaches</span>
-        //                 <svg className={`step-icon ${activeStep === 2 ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        //                     <path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        //                 </svg>
-        //             </button>
-        //             <div className={`step-content ${activeStep === 2 ? 'active' : ''}`}>
-        //                 <p>Find and connect with experienced coaches who can help you improve your game and reach your goals.</p>
-        //             </div>
-        //         </div>
-        //     </div>
-
-        //     <div className="get-started">
-        //         <h2 className="get-started-title">Get Started Now</h2>
-        //         <p className="get-started-description">Join CricketConnect and elevate your game today!</p>
-        //         <button className="signup-button">Sign Up</button>
-        //     </div>
-        // </section>
-    
+      {/* "Get Started Now" Section (Next Row) */}
+      <div style={{ marginTop: '60px', textAlign: 'left',marginBottom:'50px' }}>
+        <h2 style={{ margin: '0 0 10px',fontSize:'40px', }}>Get Started Now</h2>
+        <p style={{ margin: '0 0 20px' }}>
+          Join CricketConnect and elevate your game today!
+        </p>
+        <button
+          style={{
+            backgroundColor: '#3456da',
+            color: '#fff',
+            border: 'none',
+            padding: '10px 20px',
+            cursor: 'pointer',
+          
+          }}  onClick={GetStarted}
+        >
+          Sign Up
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default OurProcesss;
