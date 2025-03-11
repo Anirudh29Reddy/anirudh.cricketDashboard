@@ -29,7 +29,7 @@ const LatestInsightsSection = () => {
   ];
 
   return (
-    <div className="insights-section">
+    <div className="insights-section" id='LatestInsightsSection'>
       <div className="Insights-header">
       <div className="Insights-header1">
       <h2>Latest Insights</h2>
