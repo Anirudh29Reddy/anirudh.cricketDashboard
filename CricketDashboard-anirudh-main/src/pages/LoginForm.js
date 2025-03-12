@@ -3,12 +3,15 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import bcrypt from "bcryptjs"; // Import bcryptjs for password hashing
 import { LoginForCoach } from "./Redux/Coach/CoachRegistration/CoachRegistrationAction";
+import { LoginForPlayer } from "./Redux/Cricketer/CricketerAuthAction";
 
 const LoginForm = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Coach");
   const [error, setError] = useState(false);
+  const loginSession = useSelector((state)=>state.cricketer.session);
+  
 
   const status = useSelector((state) => state.CoachRegister.CoachRegisterDetails.status);
   const router = useRouter();
@@ -26,11 +29,19 @@ const LoginForm = () => {
   };
 
   useEffect(() => {
-    console.log(status, "status for login");
+    console.log(status,loginSession, "status for login");
     if (status == 1) {
       router.push("/CoachMainPage");
     }
+  
   }, [status]);
+
+  useEffect(()=>{
+    if(loginSession){
+      console.log(loginSession,"fla");
+      router.push("/CricketerMainPage");
+    }
+  },[loginSession])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,6 +60,11 @@ const LoginForm = () => {
 
     if(data.role == 'Coach')
     dispatch(LoginForCoach(data));
+   else if(data.role == 'Cricketer')
+   {
+    console.log(data,"for cricketer");
+    dispatch(LoginForPlayer(data))
+   }
   };
 
   return (
