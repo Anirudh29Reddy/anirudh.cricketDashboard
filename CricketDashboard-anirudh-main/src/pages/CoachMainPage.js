@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
 // import './App.css';
-import Sidebar from '../Components/CricketerDashboardComponents/SideNav';
-import ChartContainer from '../Components/CricketerDashboardComponents/ChartContainer';
+import Sidebar from '@/Components/CricketerDashboardComponents/SideNav';
+import ChartContainer from '@/Components/CricketerDashboardComponents/ChartContainer';
 // import { Sidebar } from 'lucide-react';
-import PlacesChart from '../Components/CricketerDashboardComponents/PlacesChart';
-import UpcomingMatches from '../Components/CricketerDashboardComponents/UpcomingMatches';
-import MatchDataUpload from '../Components/CricketerDashboardComponents/MatchDataUpload';
-import CricketTrainingTracker from '../Components/CricketerDashboardComponents/CricketTrainingTracker';
-// import TrainingProcess from '../Components/CricketerDashboardComponents/TrainingProcess';
-import ReportsAndAnalyze from '../Components/CricketerDashboardComponents/ReportsAndAnalyze';
+import PlacesChart from '@/Components/CricketerDashboardComponents/PlacesChart';
+import UpcomingMatches from '@/Components/CricketerDashboardComponents/UpcomingMatches';
+import MatchDataUpload from '@/Components/CricketerDashboardComponents/MatchDataUpload';
+import CricketTrainingTracker from '@/Components/CricketerDashboardComponents/CricketTrainingTracker';
+// import TrainingProcess from '@/Components/CricketerDashboardComponents/TrainingProcess';
+import ReportsAndAnalyze from '@/Components/CricketerDashboardComponents/ReportsAndAnalyze';
 
-import Profile  from '../Components/CricketerDashboardComponents/Profile';
+import Profile  from '@/Components/CricketerDashboardComponents/Profile';
 import { useRouter } from 'next/router';
-import CoachHeader from '../Components/CoachDashboardComponents/CoachHeader';
-import CoachSideBar from '../Components/CoachDashboardComponents/CoachSideBar';
+import CoachHeader from '@/Components/CoachDashboardComponents/CoachHeader';
+import CoachSideBar from '@/Components/CoachDashboardComponents/CoachSideBar';
 import { useSelector } from 'react-redux';
 
 import CricketersList from '../Components/CoachDashboardComponents/CricketersList'
-import PlayerPerformanceReport from '../Components/CoachDashboardComponents/Player Performance Report';
-import TrainingSchedule from '../Components/CoachDashboardComponents/TrainingSchedule';
+import PlayerPerformanceReport from '@/Components/CoachDashboardComponents/Player Performance Report';
+import TrainingSchedule from '@/Components/CoachDashboardComponents/TrainingSchedule';
 
 const CoachMainPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
