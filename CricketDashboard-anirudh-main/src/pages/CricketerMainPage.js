@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
 // import './App.css';
-import TopNav from '../Components/CricketerDashboardComponents/TopNav';
-import Sidebar from '../Components/CricketerDashboardComponents/SideNav';
-import ChartContainer from '../Components/CricketerDashboardComponents/ChartContainer';
+import TopNav from '@/Components/CricketerDashboardComponents/TopNav';
+import Sidebar from '@/Components/CricketerDashboardComponents/SideNav';
+import ChartContainer from '@/Components/CricketerDashboardComponents/ChartContainer';
 // import { Sidebar } from 'lucide-react';
-import PlacesChart from '../Components/CricketerDashboardComponents/PlacesChart';
-import UpcomingMatches from '../Components/CricketerDashboardComponents/UpcomingMatches';
-import MatchDataUpload from '../Components/CricketerDashboardComponents/MatchDataUpload';
-import CricketTrainingTracker from '../Components/CricketerDashboardComponents/CricketTrainingTracker';
-// import TrainingProcess from '../Components/CricketerDashboardComponents/TrainingProcess';
-import ReportsAndAnalyze from '../Components/CricketerDashboardComponents/ReportsAndAnalyze';
+import PlacesChart from '@/Components/CricketerDashboardComponents/PlacesChart';
+import UpcomingMatches from '@/Components/CricketerDashboardComponents/UpcomingMatches';
+import MatchDataUpload from '@/Components/CricketerDashboardComponents/MatchDataUpload';
+import CricketTrainingTracker from '@/Components/CricketerDashboardComponents/CricketTrainingTracker';
+// import TrainingProcess from '@/Components/CricketerDashboardComponents/TrainingProcess';
+import ReportsAndAnalyze from '@/Components/CricketerDashboardComponents/ReportsAndAnalyze';
 
-import Profile  from '../Components/CricketerDashboardComponents/Profile';
+import Profile  from '@/Components/CricketerDashboardComponents/Profile';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const CricketMAinPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const loginSession = useSelector((state)=>state.cricketer.session);
+  // const status = useSelector((state) => state.CoachRegister.CoachRegisterDetails.status);
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -28,13 +30,18 @@ const CricketMAinPage = () => {
   const getRoute = (label) => {
     console.log("route", label);
     setrRouting(label);
+  
    
   };
   
 
   useEffect(()=>{
-//    router.push('')
-console.log(routing,"rou",routing==="CricketTrainingTracker");
+  console.log(routing,"rou",routing==="CricketTrainingTracker");
+  console.log(loginSession,"value");
+  if(!loginSession)
+  {
+    router.push('/LoginForm');
+  }
   },[routing])
   return (
 
