@@ -2,6 +2,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import CoachRegisterSlice from '../pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice'
+import cricketerAuthSlice from '../pages/Redux/Cricketer/CricketerAuthSlice'
+import matchSlice from '../pages/Redux/TrainingModule/TrainingModuleSlice'
 
 // Persist configuration
 const persistConfig = {
@@ -12,7 +14,9 @@ const persistConfig = {
 // Combine reducers
 const rootReducer = combineReducers({
   // user: userRegisterSlice,
-  CoachRegister : CoachRegisterSlice
+  CoachRegister : CoachRegisterSlice,
+  cricketer :cricketerAuthSlice,
+  match:matchSlice
   });
 
 // Persisted reducer
