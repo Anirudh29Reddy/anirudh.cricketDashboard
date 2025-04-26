@@ -8,8 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-//   const { cricketerid } = req.query;
-    const {userId} = req.query;
+  const { userId } = req.query;
 
   if (!userId) {
     return res.status(400).json({ error: 'Cricketer ID is required' });
@@ -57,14 +56,16 @@ export default async function handler(req, res) {
       JOIN public.coachesfinal cf 
           ON (pp.player_role = 'Batsman' AND cf.specialization ILIKE '%Batting%')
           OR (pp.player_role = 'Bowler' AND cf.specialization ILIKE '%Bowling%')
-      WHERE pp.performance_rating = 'Average' AND pp.cricketerid = $1
+      WHERE pp.cricketerid = $1
       ORDER BY pp.matchtype, pp.player_role, cf.coachid;
     `;
 
     const { rows } = await pool.query(query, [userId]);
 
+    console.log(rows, 'hello rows');
+
     if (rows.length === 0) {
-      return res.status(201).json({ message: 'Excellent' });
+      return res.status(200).json({ message: 'No performance data found' });
     }
 
     res.status(200).json(rows);

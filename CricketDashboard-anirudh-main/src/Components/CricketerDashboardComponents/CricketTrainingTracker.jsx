@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadMatchData } from '@/pages/Redux/TrainingModule/TrainingModuleAction';
+import { loadMatchData } from '../../pages/Redux/TrainingModule/TrainingModuleAction';
 
 const CricketMatchReport = () => {
   const [step, setStep] = useState(1);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { LogOutForPlayer } from '@/pages/Redux/Cricketer/CricketerAuthAction';
+import { LogOutForPlayer } from '../../pages/Redux/Cricketer/CricketerAuthAction';
 
 const Sidebar = ({ isOpen, route }) => {
   // Using useState to manage navItems dynamically

@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import pool from '../../../src/utils/db';
 import bcrypt from 'bcryptjs'; // Import bcrypt for password hashing
-import jwt from 'jsonwebtoken'; // Import JWT for authentication
 
 dotenv.config();
 

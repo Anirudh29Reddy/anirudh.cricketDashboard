@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
 // import './App.css';
-import TopNav from '@/Components/CricketerDashboardComponents/TopNav';
-import Sidebar from '@/Components/CricketerDashboardComponents/SideNav';
-import ChartContainer from '@/Components/CricketerDashboardComponents/ChartContainer';
+import TopNav from './../Components/CricketerDashboardComponents/TopNav';
+import Sidebar from './../Components/CricketerDashboardComponents/SideNav';
+import ChartContainer from './../Components/CricketerDashboardComponents/ChartContainer';
 // import { Sidebar } from 'lucide-react';
-import PlacesChart from '@/Components/CricketerDashboardComponents/PlacesChart';
-import UpcomingMatches from '@/Components/CricketerDashboardComponents/UpcomingMatches';
-import MatchDataUpload from '@/Components/CricketerDashboardComponents/MatchDataUpload';
-import CricketTrainingTracker from '@/Components/CricketerDashboardComponents/CricketTrainingTracker';
-// import TrainingProcess from '@/Components/CricketerDashboardComponents/TrainingProcess';
-import ReportsAndAnalyze from '@/Components/CricketerDashboardComponents/ReportsAndAnalyze';
+import PlacesChart from './../Components/CricketerDashboardComponents/PlacesChart';
+import UpcomingMatches from './../Components/CricketerDashboardComponents/UpcomingMatches';
+import MatchDataUpload from './../Components/CricketerDashboardComponents/MatchDataUpload';
+import CricketTrainingTracker from './../Components/CricketerDashboardComponents/CricketTrainingTracker';
+// import TrainingProcess from './../Components/CricketerDashboardComponents/TrainingProcess';
+import ReportsAndAnalyze from './../Components/CricketerDashboardComponents/ReportsAndAnalyze';
 
-import Profile  from '@/Components/CricketerDashboardComponents/Profile';
+import Profile  from './../Components/CricketerDashboardComponents/Profile';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 

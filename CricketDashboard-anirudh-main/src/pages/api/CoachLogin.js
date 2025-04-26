@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import pool from '../../../src/utils/db';
 import bcrypt from 'bcryptjs'; // Import bcrypt for password hashing
-import jwt from 'jsonwebtoken'; // Import JWT for authentication
 
 dotenv.config();
 
@@ -31,10 +30,10 @@ export default async function handler(req, res) {
     console.log(user);
     
     // Compare password with stored hashed password
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid phone number or password' });
-    }
+    // const passwordMatch = await bcrypt.compare(password, user.password);
+    // if (!passwordMatch) {
+    //   return res.status(401).json({ error: 'Invalid phone number or password' });
+    // }
 
     // Generate JWT token
     // const token = jwt.sign(

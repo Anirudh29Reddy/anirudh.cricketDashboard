@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import pool from '../../../src/utils/db';
 import bcrypt from 'bcryptjs'; 
-import jwt from 'jsonwebtoken'; 
 
 dotenv.config();
 

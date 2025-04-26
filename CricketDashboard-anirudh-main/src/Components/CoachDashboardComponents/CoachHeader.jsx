@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCoachDetails } from '@/pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
+import { getCoachDetails } from '../../pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
 import { useRouter } from 'next/router';
 
 

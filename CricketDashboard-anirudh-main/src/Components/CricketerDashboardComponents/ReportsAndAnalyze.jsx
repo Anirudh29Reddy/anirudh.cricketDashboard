@@ -40,6 +40,7 @@ const ReportsAndAnalyze = () => {
       console.error("Error fetching analysis:", error);
     }
   };
+  console.log(analyzeData,"an");
 
   const handleAssign = async (cricketerId, coachId) => {
     const assignmentData = {

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCoachDetails } from '@/pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
+import { getCoachDetails } from '../../pages/Redux/Coach/CoachRegistration/CoachRegistrationSlice';
 
 const CoachSideBar = ({ isOpen ,route }) => {
   const navItems = [

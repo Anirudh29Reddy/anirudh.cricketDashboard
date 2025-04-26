@@ -13,10 +13,10 @@ export default async function handler(req, res) {
   console.log(id,"ph");
   try {
     const match = {
-      matchid: "M004",
+      matchid: "M005",
       matchtype: "T20",
-      dateofmatch: "2024-02-20",
-      venue: "Eden Gardens",
+      dateofmatch: "2024-02-21",
+      venue: "Eden Garden",
       hometeam: "India",
       awayteam: "Australia",
       matchresult: "Loss"
@@ -24,17 +24,17 @@ export default async function handler(req, res) {
 
     const scoredata = [
       {
-        scoredataid: "S001",
-        matchid: "M004",
+        scoredataid: "S005",
+        matchid: "M005",
         ballno: 1,
         outcome: "Run",
-        runs: 4,
+        runs: 0,
         deliverytype: "Normal",
         wicket: false,
         cricketerid: id
       },
       {
-        scoredataid: "S002",
+        scoredataid: "S004",
         matchid: "M004",
         ballno: 2,
         outcome: "Wicket",
@@ -51,6 +51,7 @@ export default async function handler(req, res) {
       ON CONFLICT (matchid) DO NOTHING;
     `;
     await pool.query(matchQuery, Object.values(match));
+
 
     const scoreQuery = `
       INSERT INTO public.scoredata (scoredataid, matchid, ballno, outcome, runs, deliverytype, wicket, cricketerid)
