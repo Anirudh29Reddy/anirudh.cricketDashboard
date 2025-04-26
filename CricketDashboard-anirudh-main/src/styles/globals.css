@@ -45,16 +45,15 @@ a {
 /* Header Styles */
 /* Header Styles */
 /* 🌟 Header Styles */
-.header {
+header {
   height: 12vh;
-  position: fixed;
+  position: fixed; /* Keeps the header fixed at the top */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 40px;
   background-color: #ffffff;
   box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
-  position: relative;
   width: 100%;
   z-index: 1000;
 }
@@ -222,7 +221,7 @@ a {
 
 /* 🌟 Main Wrapper */
 .hero-wrapper {
-  
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -240,6 +239,8 @@ a {
   width: 100%;
   gap: 50px;
   margin: 0 auto; /* Center content */
+  margin-top: 45%;
+  margin-bottom: 25%;
 }
 
 /* 🌟 Left Section - Text */
@@ -425,107 +426,107 @@ a {
     max-width: 280px;
   }
 }
-
-
-
 /* Stats Sections */
 
-  .statistic-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      gap: 25px;
-    
-  }
+ /* Stats Sections */
 
- .statistic-content-Heading {
-      font-size: 3rem; /* Correct way to set font size */
-      font-weight: bold; /* Optional: Make the text bold */
-      margin-top: 5%;
+ .statistic-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 25px;
+  margin-top: 15%;
+
+}
+
+.statistic-content-Heading {
+  font-size: 3rem; /* Correct way to set font size */
+  font-weight: bold; /* Optional: Make the text bold */
+  margin-top: 5%;
+
+}
+.statistic-image-container {
+  flex: 1;
+}
+
+.statistic-image {
+  width: 95%;
+  border-radius: 10px;
+  padding: 10px;
+  margin-left:5%
+}
+
+.statistic-content {
+  flex: 1;
+  padding: 20px;
+  margin-top:-4%;
+font: 1rem;
+ 
+   
+  
+}
+
+.statistic-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 10%;
+  
+}
+  .statistic-content-para{
+  
+   margin-bottom: 2%;
+   margin-top:5%;
+   font: 1rem;
   
   }
-  .statistic-image-container {
-      flex: 1;
-  }
 
-  .statistic-image {
-      width: 95%;
-      border-radius: 10px;
-      padding: 10px;
-      margin-left:5%
-  }
+.statistic-count {
+  font: 2rem;
+  font-weight: bold;
+  color: #ff5733;
+}
 
-  .statistic-content {
-      flex: 1;
-      padding: 20px;
-      margin-top:-4%;
-    font: 1rem;
-     
-       
-      
+@media (max-width: 768px) {
+  .statistic-container {
+    margin-top: 20vh;
+   
+      flex-direction: column;
+      text-align: center;
   }
 
   .statistic-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 10%;
-      
+      grid-template-columns: 1fr;
   }
-      .statistic-content-para{
-      
-       margin-bottom: 2%;
-       margin-top:5%;
-       font: 1rem;
-      
-      }
+
+  .statistic-image-container {
+    flex: 1;
+  
+}
+
+.statistic-image {
+    width: 100%;
+    height: 100%;
+   
+   margin-left: -1.5%;
+
+}
+}
+
+@media (max-width: 480px) {
+  .statistic-container {
+      padding: 10px;
+  }
+
+  .statistic-content {
+      padding: 10px;
+  }
 
   .statistic-count {
-      font: 2rem;
-      font-weight: bold;
-      color: #ff5733;
+      font-size: 20px;
   }
-
-  @media (max-width: 768px) {
-      .statistic-container {
-        margin-top: 20vh;
-       
-          flex-direction: column;
-          text-align: center;
-      }
-
-      .statistic-stats {
-          grid-template-columns: 1fr;
-      }
-
-      .statistic-image-container {
-        flex: 1;
-      
-    }
-  
-    .statistic-image {
-        width: 100%;
-        height: 100%;
-       
-       margin-left: -1.5%;
-
-    }
-  }
-
-  @media (max-width: 480px) {
-      .statistic-container {
-          padding: 10px;
-      }
-
-      .statistic-content {
-          padding: 10px;
-      }
-
-      .statistic-count {
-          font-size: 20px;
-      }
-  }
+}
 
 /* Process Section */
 
