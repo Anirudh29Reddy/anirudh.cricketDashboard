@@ -79,7 +79,7 @@ const ReportsAndAnalyze = () => {
         <div className="col-md-2"></div>
         <div className="col-md-5 text-center">
           <button className="btn btn-success" onClick={fetchAnalysis}>
-            Analyze Coach
+            Analyse Coach
           </button>
         </div>
       </div>
